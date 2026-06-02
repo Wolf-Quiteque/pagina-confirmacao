@@ -46,7 +46,6 @@ Hora: 18h00
 Local: Rua do BFA, Travessa 26, Bairro Benfica, Talatona - Luanda
 Mapa: https://maps.app.goo.gl/oj64qEYTta2ChTkE8
 Contacto: 930 533 405
-Email: geral@nawabus.com
 
 Esperamos por si!
 Viajar aqui e facil. - NAWABUS`);

@@ -133,7 +133,7 @@ export default function ConfirmationSection() {
                       <label className="block text-sm font-semibold text-gray-500 mb-2">
                         Número de Telefone <span className="text-primary">*</span>
                       </label>
-                      <div className="flex gap-2">
+                      <div className="flex min-w-0 gap-2">
                         <div className="flex items-center px-4 py-4 rounded-2xl
                                         bg-primary-soft border-2 border-primary/20
                                         text-primary-foreground font-semibold text-sm whitespace-nowrap shrink-0">
@@ -145,7 +145,7 @@ export default function ConfirmationSection() {
                           onChange={(e) => setTelefone(formatTelefone(e.target.value))}
                           placeholder="9XX XXX XXX"
                           disabled={loading}
-                          className="flex-1 px-5 py-4 rounded-2xl border-2 border-gray-100 text-foreground
+                          className="min-w-0 flex-1 px-4 sm:px-5 py-4 rounded-2xl border-2 border-gray-100 text-foreground
                                      placeholder:text-gray-300 text-base
                                      focus:border-primary-ring focus:ring-4 focus:ring-primary/20
                                      disabled:opacity-50 outline-none transition-all duration-200"
