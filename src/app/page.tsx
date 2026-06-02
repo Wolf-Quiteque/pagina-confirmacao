@@ -2,6 +2,7 @@ import HeroSection from "@/components/HeroSection";
 import EventInfoCards from "@/components/EventInfoCards";
 import Countdown from "@/components/Countdown";
 import ConfirmationSection from "@/components/ConfirmationSection";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -15,14 +16,14 @@ export default function Home() {
       <footer className="relative bg-[#0d0300] py-12 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-[#050100] to-[#1e0800]" />
         <div className="relative z-10 max-w-lg mx-auto">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-lg">
-              🚌
-            </div>
-            <span className="text-xl font-black tracking-widest">
-              <span className="text-amber-400">NAWA</span>
-              <span className="text-white">BUS</span>
-            </span>
+          <div className="inline-flex items-center justify-center mb-4">
+            <Image
+              src="/nawabus_logo_white.webp"
+              alt="Nawabus"
+              width={120}
+              height={60}
+              className="h-12 w-auto"
+            />
           </div>
           <p className="text-amber-200/40 text-sm mb-1">
             Rede Integrada de Transporte de Angola

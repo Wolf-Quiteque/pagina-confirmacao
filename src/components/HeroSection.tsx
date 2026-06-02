@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const ease: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
@@ -45,14 +46,15 @@ export default function HeroSection() {
           className="mb-10"
         >
           <a href="https://nawabus.co.ao" target="_blank" rel="noopener noreferrer"
-             className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xl shadow-lg shadow-orange-500/30">
-              🚌
-            </div>
-            <span className="text-2xl font-black tracking-widest">
-              <span className="text-amber-400 group-hover:text-amber-300 transition-colors">NAWA</span>
-              <span className="text-white group-hover:text-gray-200 transition-colors">BUS</span>
-            </span>
+             className="inline-flex items-center justify-center group">
+            <Image
+              src="/nawabus_logo_white.webp"
+              alt="Nawabus"
+              width={120}
+              height={60}
+              className="h-14 w-auto"
+              priority
+            />
           </a>
         </motion.div>
 

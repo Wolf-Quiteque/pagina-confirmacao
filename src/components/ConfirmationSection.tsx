@@ -1,48 +1,13 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 
 interface Confirmacao {
-  id: number;
+  id: string;
   nome: string;
   telefone: string;
-  confirmadoEm: string;
-}
-
-const AVATAR_COLORS = [
-  "from-amber-400  to-orange-500",
-  "from-orange-400 to-red-500",
-  "from-yellow-400 to-amber-500",
-  "from-amber-500  to-orange-600",
-  "from-orange-300 to-amber-400",
-];
-
-function maskPhone(telefone: string) {
-  const digits = telefone.replace(/\D/g, "");
-  const visible = digits.slice(0, 3);
-  return `${visible} *** ***`;
-}
-
-function initials(nome: string) {
-  return nome.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
-}
-
-function Avatar({ nome, index }: { nome: string; index: number }) {
-  const color = AVATAR_COLORS[index % AVATAR_COLORS.length];
-  return (
-    <motion.div
-      key={nome}
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: index * 0.06, type: "spring", stiffness: 220, damping: 16 }}
-      title={nome}
-      className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${color}
-                  flex items-center justify-center text-white font-bold text-xs
-                  shadow-md shrink-0 cursor-default`}
-    >
-      {initials(nome)}
-    </motion.div>
-  );
+  confirmado_em: string;
+  sms_status?: string;
 }
 
 function formatTelefone(raw: string) {
@@ -59,20 +24,9 @@ export default function ConfirmationSection() {
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState<Confirmacao | null>(null);
   const [error, setError] = useState("");
-  const [lista, setLista] = useState<Confirmacao[]>([]);
 
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-
-  async function fetchLista() {
-    try {
-      const r = await fetch("/api/confirmar");
-      const d = await r.json();
-      setLista(d.confirmacoes ?? []);
-    } catch { /* silent */ }
-  }
-
-  useEffect(() => { fetchLista(); }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -95,7 +49,6 @@ export default function ConfirmationSection() {
       } else {
         setConfirmed(d.confirmacao);
         setSuccess(true);
-        fetchLista();
       }
     } catch {
       setError("Erro de conexão. Tente novamente mais tarde.");
@@ -136,12 +89,13 @@ export default function ConfirmationSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          {/* ── Form / Success card ── */}
+        {/* Single centered column layout */}
+        <div className="flex justify-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.15 }}
+            className="w-full max-w-md"
           >
             <AnimatePresence mode="wait">
               {!success ? (
@@ -316,83 +270,6 @@ export default function ConfirmationSection() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
-
-          {/* ── Confirmed list ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          >
-            <div className="bg-white rounded-3xl shadow-2xl shadow-orange-100/60
-                            border border-orange-100/80 p-8 md:p-10">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-7">
-                <h3 className="text-xl font-black text-[#1a0500]">Confirmações</h3>
-                <motion.div
-                  key={lista.length}
-                  initial={{ scale: 1.3 }}
-                  animate={{ scale: 1 }}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full
-                             bg-gradient-to-r from-amber-400 to-orange-500
-                             text-white text-sm font-bold shadow-md"
-                >
-                  <span>✓</span>
-                  <span>{lista.length} confirmados</span>
-                </motion.div>
-              </div>
-
-              {/* Scrollable rows */}
-              <div className="space-y-2.5 max-h-64 overflow-y-auto custom-scroll pr-1">
-                {lista.length === 0 ? (
-                  <p className="text-gray-300 text-center py-10">A carregar…</p>
-                ) : (
-                  lista.map((c, i) => (
-                    <motion.div
-                      key={c.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                      className="flex items-center gap-3 px-4 py-3 rounded-2xl
-                                 bg-gradient-to-r from-amber-50 to-orange-50
-                                 border border-orange-100"
-                    >
-                      <div
-                        className={`w-9 h-9 rounded-xl bg-gradient-to-br ${AVATAR_COLORS[i % AVATAR_COLORS.length]}
-                                    flex items-center justify-center text-white font-bold text-xs shadow-sm shrink-0`}
-                      >
-                        {initials(c.nome)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-[#1a0500] text-sm truncate">{c.nome}</div>
-                        <div className="text-gray-400 text-xs">{maskPhone(c.telefone)}</div>
-                      </div>
-                      <span className="text-green-400 text-sm font-bold shrink-0">✓</span>
-                    </motion.div>
-                  ))
-                )}
-              </div>
-
-              {/* Avatar bubble row */}
-              {lista.length > 0 && (
-                <div className="mt-7 pt-7 border-t border-gray-100/80">
-                  <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-3">
-                    Todos os confirmados
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {lista.slice(0, 10).map((c, i) => (
-                      <Avatar key={c.id} nome={c.nome} index={i} />
-                    ))}
-                    {lista.length > 10 && (
-                      <div className="w-11 h-11 rounded-2xl bg-gray-100 flex items-center justify-center
-                                      text-gray-400 text-xs font-bold">
-                        +{lista.length - 10}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
           </motion.div>
         </div>
       </div>
