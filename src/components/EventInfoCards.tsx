@@ -8,27 +8,27 @@ const cards = [
     label: "Data",
     value: "9 de Junho de 2026",
     sub: "Terça-feira",
-    accent: "from-amber-400 to-amber-500",
-    ring: "ring-amber-200",
-    bg: "bg-amber-50",
+    accent: "from-primary to-primary-ring",
+    ring: "ring-primary/25",
+    bg: "bg-primary-soft",
   },
   {
     icon: "🕕",
     label: "Horário",
     value: "18h00",
     sub: "A partir das 18 horas",
-    accent: "from-orange-400 to-orange-500",
-    ring: "ring-orange-200",
-    bg: "bg-orange-50",
+    accent: "from-primary-ring to-primary",
+    ring: "ring-primary/25",
+    bg: "bg-primary-muted",
   },
   {
     icon: "📍",
     label: "Localização",
     value: "Rua do BFA, Travessa 26",
     sub: "Bairro Benfica, Município de Talatona · Luanda",
-    accent: "from-amber-500 to-orange-500",
-    ring: "ring-orange-200",
-    bg: "bg-gradient-to-br from-amber-50 to-orange-50",
+    accent: "from-primary to-primary-ring",
+    ring: "ring-primary/25",
+    bg: "bg-gradient-to-br from-primary-soft to-primary-muted",
   },
 ];
 
@@ -37,7 +37,7 @@ export default function EventInfoCards() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-24 px-6 bg-[#fffbf4]">
+    <section ref={ref} className="py-24 px-6 bg-background">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -45,11 +45,11 @@ export default function EventInfoCards() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <p className="text-orange-500 text-xs font-bold uppercase tracking-widest mb-3">
+          <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3">
             ✦ Detalhes do Evento ✦
           </p>
-          <h2 className="text-3xl md:text-5xl font-black text-[#1a0500]">
-            Marque na Sua <span className="text-orange-500">Agenda</span>
+          <h2 className="text-3xl md:text-5xl font-black text-foreground">
+            Marque na Sua <span className="text-primary">Agenda</span>
           </h2>
           <p className="text-gray-400 mt-4 max-w-md mx-auto">
             Tudo o que precisa saber para não perder este momento especial.
@@ -79,7 +79,7 @@ export default function EventInfoCards() {
               <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
                 {card.label}
               </div>
-              <div className="text-xl font-black text-[#1a0500] mb-1">{card.value}</div>
+              <div className="text-xl font-black text-foreground mb-1">{card.value}</div>
               <div className="text-sm text-gray-500 leading-snug">{card.sub}</div>
 
               {/* Decorative corner */}

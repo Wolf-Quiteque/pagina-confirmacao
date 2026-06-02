@@ -61,13 +61,13 @@ export default function ConfirmationSection() {
     <section
       id="confirmacao"
       ref={ref}
-      className="py-28 px-6 bg-[#fffbf4] relative overflow-hidden"
+      className="py-28 px-6 bg-background relative overflow-hidden"
     >
       {/* Soft background shapes */}
       <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full
-                      bg-amber-100/60 blur-3xl pointer-events-none" />
+                      bg-primary-soft/70 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full
-                      bg-orange-100/50 blur-3xl pointer-events-none" />
+                      bg-primary-muted/60 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto">
         {/* Section heading */}
@@ -77,12 +77,12 @@ export default function ConfirmationSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-orange-500 text-xs font-bold uppercase tracking-widest mb-3">
+          <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3">
             🎟️ Confirmação de Presença
           </p>
-          <h2 className="text-3xl md:text-5xl font-black text-[#1a0500]">
+          <h2 className="text-3xl md:text-5xl font-black text-foreground">
             Confirme a Sua{" "}
-            <span className="text-orange-500">Presença</span>
+            <span className="text-primary">Presença</span>
           </h2>
           <p className="text-gray-400 mt-4 max-w-md mx-auto">
             Preencha os seus dados para garantir o seu lugar neste momento histórico.
@@ -102,10 +102,10 @@ export default function ConfirmationSection() {
                 <motion.div
                   key="form"
                   exit={{ opacity: 0, scale: 0.92, y: -10 }}
-                  className="bg-white rounded-3xl shadow-2xl shadow-orange-100/60
-                             border border-orange-100/80 p-6 sm:p-8 md:p-10"
+                  className="bg-white rounded-3xl shadow-2xl shadow-primary-soft/70
+                             border border-primary/20 p-6 sm:p-8 md:p-10"
                 >
-                  <h3 className="text-xl font-black text-[#1a0500] mb-7">
+                  <h3 className="text-xl font-black text-foreground mb-7">
                     Preencha os seus dados
                   </h3>
 
@@ -113,7 +113,7 @@ export default function ConfirmationSection() {
                     {/* Nome */}
                     <div>
                       <label className="block text-sm font-semibold text-gray-500 mb-2">
-                        Nome Completo <span className="text-orange-400">*</span>
+                        Nome Completo <span className="text-primary">*</span>
                       </label>
                       <input
                         type="text"
@@ -121,9 +121,9 @@ export default function ConfirmationSection() {
                         onChange={(e) => setNome(e.target.value)}
                         placeholder="Ex: Ana Rodrigues"
                         disabled={loading}
-                        className="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 text-[#1a0500]
+                        className="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 text-foreground
                                    placeholder:text-gray-300 text-base
-                                   focus:border-amber-400 focus:ring-4 focus:ring-amber-100
+                                   focus:border-primary-ring focus:ring-4 focus:ring-primary/20
                                    disabled:opacity-50 outline-none transition-all duration-200"
                       />
                     </div>
@@ -131,12 +131,12 @@ export default function ConfirmationSection() {
                     {/* Telefone */}
                     <div>
                       <label className="block text-sm font-semibold text-gray-500 mb-2">
-                        Número de Telefone <span className="text-orange-400">*</span>
+                        Número de Telefone <span className="text-primary">*</span>
                       </label>
                       <div className="flex gap-2">
                         <div className="flex items-center px-4 py-4 rounded-2xl
-                                        bg-amber-50 border-2 border-amber-100
-                                        text-amber-700 font-semibold text-sm whitespace-nowrap shrink-0">
+                                        bg-primary-soft border-2 border-primary/20
+                                        text-primary-foreground font-semibold text-sm whitespace-nowrap shrink-0">
                           🇦🇴 +244
                         </div>
                         <input
@@ -145,9 +145,9 @@ export default function ConfirmationSection() {
                           onChange={(e) => setTelefone(formatTelefone(e.target.value))}
                           placeholder="9XX XXX XXX"
                           disabled={loading}
-                          className="flex-1 px-5 py-4 rounded-2xl border-2 border-gray-100 text-[#1a0500]
+                          className="flex-1 px-5 py-4 rounded-2xl border-2 border-gray-100 text-foreground
                                      placeholder:text-gray-300 text-base
-                                     focus:border-amber-400 focus:ring-4 focus:ring-amber-100
+                                     focus:border-primary-ring focus:ring-4 focus:ring-primary/20
                                      disabled:opacity-50 outline-none transition-all duration-200"
                         />
                       </div>
@@ -173,11 +173,11 @@ export default function ConfirmationSection() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-5 rounded-2xl font-bold text-lg text-white
-                                 bg-gradient-to-r from-amber-500 to-orange-500
-                                 shadow-xl shadow-orange-200/70
-                                 hover:from-amber-400 hover:to-orange-400
-                                 hover:shadow-orange-300/80 hover:scale-[1.02]
+                      className="w-full py-5 rounded-2xl font-bold text-lg text-primary-foreground
+                                 bg-gradient-to-r from-primary to-primary-ring
+                                 shadow-xl shadow-primary/35
+                                 hover:from-primary-ring hover:to-primary
+                                 hover:shadow-primary/50 hover:scale-[1.02]
                                  active:scale-[0.98]
                                  disabled:opacity-60 disabled:cursor-not-allowed
                                  transition-all duration-300
@@ -188,7 +188,7 @@ export default function ConfirmationSection() {
                           <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-                            className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                            className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                           />
                           <span>A confirmar...</span>
                         </>
@@ -217,25 +217,25 @@ export default function ConfirmationSection() {
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ delay: 0.15, type: "spring", stiffness: 260, damping: 16 }}
                     className="w-28 h-28 mx-auto rounded-full
-                               bg-gradient-to-br from-amber-400 to-orange-500
+                               bg-gradient-to-br from-primary to-primary-ring
                                flex items-center justify-center text-6xl
-                               shadow-2xl shadow-orange-300/50 mb-6"
+                               shadow-2xl shadow-primary/40 mb-6"
                   >
                     🎉
                   </motion.div>
 
-                  <h3 className="text-2xl font-black text-[#1a0500] mb-2">
+                  <h3 className="text-2xl font-black text-foreground mb-2">
                     Presença Confirmada!
                   </h3>
                   <p className="text-gray-500 mb-8 leading-relaxed">
                     Obrigado,{" "}
-                    <strong className="text-orange-500">{confirmed?.nome}</strong>!
+                    <strong className="text-primary">{confirmed?.nome}</strong>!
                     <br />
                     Esperamos por si dia{" "}
-                    <strong className="text-[#1a0500]">9 de Junho às 18h00</strong> 🚌
+                    <strong className="text-foreground">9 de Junho às 18h00</strong> 🚌
                   </p>
 
-                  <div className="rounded-2xl bg-amber-50 border border-amber-200 p-5 text-left space-y-3">
+                  <div className="rounded-2xl bg-primary-soft border border-primary/25 p-5 text-left space-y-3">
                     {[
                       { icon: "📍", text: "Rua do BFA, Travessa 26, Bairro Benfica, Talatona · Luanda" },
                       { icon: "🕕", text: "18h00 — Terça-feira, 9 de Junho de 2026" },
