@@ -17,6 +17,12 @@ const AVATAR_COLORS = [
   "from-orange-300 to-amber-400",
 ];
 
+function maskPhone(telefone: string) {
+  const digits = telefone.replace(/\D/g, "");
+  const visible = digits.slice(0, 3);
+  return `${visible} *** ***`;
+}
+
 function initials(nome: string) {
   return nome.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
@@ -359,7 +365,7 @@ export default function ConfirmationSection() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-[#1a0500] text-sm truncate">{c.nome}</div>
-                        <div className="text-gray-400 text-xs">{c.telefone}</div>
+                        <div className="text-gray-400 text-xs">{maskPhone(c.telefone)}</div>
                       </div>
                       <span className="text-green-400 text-sm font-bold shrink-0">✓</span>
                     </motion.div>
