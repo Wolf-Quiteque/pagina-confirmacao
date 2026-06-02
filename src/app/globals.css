@@ -3,11 +3,11 @@
 :root {
   --background: oklch(0.99 0.01 100);
   --foreground: oklch(0.24 0.015 95);
-  --primary: oklch(0.84 0.12 97);
-  --primary-foreground: oklch(0.26 0.025 90);
-  --primary-soft: oklch(0.955 0.022 100);
-  --primary-muted: oklch(0.94 0.032 100);
-  --primary-ring: oklch(0.80 0.08 97);
+  --primary: #f0b100;
+  --primary-foreground: #2b2100;
+  --primary-soft: #fff8e1;
+  --primary-muted: #ffe8a3;
+  --primary-ring: #d99d00;
   --brand-ink: oklch(0.2 0.01 92);
   --brand-ink-raised: oklch(0.24 0.014 92);
 }
