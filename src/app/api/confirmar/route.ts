@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
-const SMS_API_URL = process.env.SMS_API_URL || "https://mimo-sms-rest-api.vercel.app/send-sms";
+const SMS_API_URL =
+  process.env.SMS_API_URL || "https://mimo-sms-rest-api.vercel.app/send-sms";
 
 export const runtime = "nodejs";
+
+function toSmsSafeText(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[–—]/g, "-")
+    .replace(/[^\x0A\x0D\x20-\x7E]/g, "")
+    .trim();
+}
 
 /**
  * Normalize phone to 9 digits (Angola format)
@@ -13,25 +25,31 @@ function normalizePhone(phone: string): string {
 }
 
 /**
- * Send thank-you SMS to the guest
+ * Send thank-you SMS to the guest.
+ * MIMO rejects some non-ASCII characters when storing the SMS, so keep this
+ * payload plain ASCII.
  */
-async function sendThankYouSms(nome: string, telefone: string): Promise<{ sent: boolean; status: string }> {
+async function sendThankYouSms(
+  nome: string,
+  telefone: string
+): Promise<{ sent: boolean; status: string }> {
   const phoneClean = normalizePhone(telefone);
-  
-  const smsText = `NAWABUS — Presenca confirmada ✅
+  const nomeSms = toSmsSafeText(nome);
 
-Ola ${nome},
+  const smsText = toSmsSafeText(`NAWABUS - Presenca confirmada
+
+Ola ${nomeSms},
 Obrigado por confirmar a sua presenca na inauguracao da nossa nova sede!
 
-• Data: Terca-feira, 9 de Junho de 2026
-• Hora: 18h00
-• Local: Rua do BFA, Travessa 26, Bairro Benfica, Talatona — Luanda
-• Mapa: https://maps.app.goo.gl/oj64qEYTta2ChTkE8
-• Contacto: 930 533 405
-• Email: geral@nawabus.com
+Data: Terca-feira, 9 de Junho de 2026
+Hora: 18h00
+Local: Rua do BFA, Travessa 26, Bairro Benfica, Talatona - Luanda
+Mapa: https://maps.app.goo.gl/oj64qEYTta2ChTkE8
+Contacto: 930 533 405
+Email: geral@nawabus.com
 
 Esperamos por si!
-Viajar aqui e facil. — NAWABUS`;
+Viajar aqui e facil. - NAWABUS`);
 
   try {
     const response = await fetch(SMS_API_URL, {
@@ -42,10 +60,10 @@ Viajar aqui e facil. — NAWABUS`;
 
     if (response.ok) {
       return { sent: true, status: "sent" };
-    } else {
-      console.error("SMS API error:", response.status, await response.text());
-      return { sent: false, status: "failed" };
     }
+
+    console.error("SMS API error:", response.status, await response.text());
+    return { sent: false, status: "failed" };
   } catch (error) {
     console.error("SMS send error:", error);
     return { sent: false, status: "failed" };
