@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
-const EVENT = new Date("2026-06-08T17:00:00");
+const EVENT = new Date("2026-06-09T18:00:00");
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -31,17 +31,17 @@ function Unit({ value, label }: { value: number; label: string }) {
           initial={{ scale: 1.25, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl
+          className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-2xl sm:rounded-3xl
                      bg-gradient-to-br from-amber-400 to-orange-500
                      flex items-center justify-center
                      shadow-xl shadow-orange-600/30"
         >
-          <span className="text-4xl md:text-5xl font-black text-white tabular-nums">
+          <span className="text-2xl sm:text-4xl md:text-5xl font-black text-white tabular-nums">
             {pad(value)}
           </span>
         </motion.div>
       </div>
-      <span className="text-amber-200/70 text-xs md:text-sm font-semibold uppercase tracking-widest">
+      <span className="text-amber-200/70 text-[10px] sm:text-xs md:text-sm font-semibold uppercase tracking-widest">
         {label}
       </span>
     </div>
@@ -49,7 +49,7 @@ function Unit({ value, label }: { value: number; label: string }) {
 }
 
 const SEP = (
-  <span className="self-start mt-10 md:mt-14 text-3xl md:text-4xl font-black text-amber-500/60 select-none">
+  <span className="hidden xs:flex self-start mt-7 sm:mt-10 md:mt-14 text-2xl sm:text-3xl md:text-4xl font-black text-amber-500/60 select-none">
     :
   </span>
 );
@@ -118,12 +118,12 @@ export default function Countdown() {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.5 }}
-          className="mt-14 inline-flex items-center gap-3 glass px-6 py-3 rounded-2xl"
+          className="mt-14 inline-flex flex-col sm:flex-row items-center gap-3 glass px-6 py-4 rounded-2xl text-center sm:text-left max-w-sm sm:max-w-none mx-auto"
         >
-          <span className="text-xl">🗓️</span>
-          <span className="text-amber-100/70 text-sm">
-            <strong className="text-amber-300">8 de Junho</strong> às <strong className="text-amber-300">17h00</strong>
-            {" "}— Segunda Rua à Direita depois do ITA
+          <span className="text-xl shrink-0">🗓️</span>
+          <span className="text-amber-100/70 text-sm leading-relaxed">
+            <strong className="text-amber-300">9 de Junho</strong> às <strong className="text-amber-300">18h00</strong>
+            {" "}— Rua do BFA, Travessa 26, Bairro Benfica, Talatona · Luanda
           </span>
         </motion.div>
       </div>

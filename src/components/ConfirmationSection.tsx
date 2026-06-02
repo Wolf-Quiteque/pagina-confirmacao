@@ -139,8 +139,8 @@ export default function ConfirmationSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* ── Form / Success card ── */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.15 }}
           >
             <AnimatePresence mode="wait">
@@ -149,7 +149,7 @@ export default function ConfirmationSection() {
                   key="form"
                   exit={{ opacity: 0, scale: 0.92, y: -10 }}
                   className="bg-white rounded-3xl shadow-2xl shadow-orange-100/60
-                             border border-orange-100/80 p-8 md:p-10"
+                             border border-orange-100/80 p-6 sm:p-8 md:p-10"
                 >
                   <h3 className="text-xl font-black text-[#1a0500] mb-7">
                     Preencha os seus dados
@@ -278,13 +278,13 @@ export default function ConfirmationSection() {
                     <strong className="text-orange-500">{confirmed?.nome}</strong>!
                     <br />
                     Esperamos por si dia{" "}
-                    <strong className="text-[#1a0500]">8 de Junho às 17h00</strong> 🚌
+                    <strong className="text-[#1a0500]">9 de Junho às 18h00</strong> 🚌
                   </p>
 
                   <div className="rounded-2xl bg-amber-50 border border-amber-200 p-5 text-left space-y-3">
                     {[
-                      { icon: "📍", text: "Segunda Rua à Direita depois do ITA" },
-                      { icon: "🕔", text: "17h00 — Segunda-feira, 8 de Junho de 2026" },
+                      { icon: "📍", text: "Rua do BFA, Travessa 26, Bairro Benfica, Talatona · Luanda" },
+                      { icon: "🕕", text: "18h00 — Terça-feira, 9 de Junho de 2026" },
                       { icon: "🚌", text: "Inauguração da Nova Sede Nawabus" },
                     ].map((row) => (
                       <div key={row.icon} className="flex items-center gap-3 text-sm text-gray-600">
@@ -320,8 +320,8 @@ export default function ConfirmationSection() {
 
           {/* ── Confirmed list ── */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.3 }}
           >
             <div className="bg-white rounded-3xl shadow-2xl shadow-orange-100/60
