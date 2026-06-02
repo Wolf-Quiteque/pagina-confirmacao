@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 const SMS_API_URL = process.env.SMS_API_URL || "https://mimo-sms-rest-api.vercel.app/send-sms";
+
+export const runtime = "nodejs";
 
 /**
  * Normalize phone to 9 digits (Angola format)
@@ -70,6 +72,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const supabase = getSupabaseAdmin();
+
     // Insert into Supabase
     const { data, error } = await supabase
       .from("event_rsvps")
@@ -98,18 +102,16 @@ export async function POST(request: NextRequest) {
     // Send SMS (non-blocking, failure is non-fatal)
     const smsResult = await sendThankYouSms(nomeClean, telefoneNorm);
 
-    // Update SMS status in Supabase (fire-and-forget)
+    // Update SMS status in Supabase. Failure is non-fatal for the RSVP.
     if (confirmacao?.id) {
-      (async () => {
-        try {
-          await supabase
-            .from("event_rsvps")
-            .update({ sms_status: smsResult.status })
-            .eq("id", confirmacao.id);
-        } catch (err) {
-          console.error("Failed to update SMS status:", err);
-        }
-      })();
+      const { error: smsStatusError } = await supabase
+        .from("event_rsvps")
+        .update({ sms_status: smsResult.status })
+        .eq("id", confirmacao.id);
+
+      if (smsStatusError) {
+        console.error("Failed to update SMS status:", smsStatusError);
+      }
     }
 
     return NextResponse.json(
