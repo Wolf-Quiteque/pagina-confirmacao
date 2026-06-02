@@ -72,7 +72,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.35, ease }}
-          className="text-5xl sm:text-6xl md:text-8xl font-black text-white leading-[1.05] mb-6"
+          className="text-4xl sm:text-6xl md:text-8xl font-black text-white leading-[1.05] mb-6"
         >
           Inauguração da
           <br />
@@ -99,11 +99,11 @@ export default function HeroSection() {
           className="flex flex-wrap justify-center gap-3 mb-14"
         >
           {[
-            { icon: "📅", label: "8 de Junho de 2026", sub: "Segunda-feira" },
-            { icon: "🕔", label: "17h00",              sub: "Hora de início" },
-            { icon: "📍", label: "Nova Sede",          sub: "2ª Rua dpôs do ITA" },
+            { icon: "📅", label: "9 de Junho de 2026", sub: "Terça-feira" },
+            { icon: "🕕", label: "18h00",              sub: "Hora de início" },
+            { icon: "📍", label: "Rua do BFA, Trav. 26", sub: "Bairro Benfica · Talatona, Luanda" },
           ].map((pill) => (
-            <div key={pill.label} className="glass flex items-center gap-3 px-5 py-3.5 rounded-2xl">
+            <div key={pill.label} className="glass flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl w-full sm:w-auto">
               <span className="text-2xl">{pill.icon}</span>
               <div className="text-left">
                 <div className="text-white font-bold text-sm leading-tight">{pill.label}</div>
