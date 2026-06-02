@@ -36,6 +36,20 @@ export default function Home() {
           >
             nawabus.co.ao
           </a>
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs">
+            <a
+              href="mailto:geral@nawabus.com"
+              className="text-primary-muted/60 hover:text-primary transition-colors"
+            >
+              geral@nawabus.com
+            </a>
+            <a
+              href="tel:+244930533405"
+              className="text-primary-muted/60 hover:text-primary transition-colors"
+            >
+              930 533 405
+            </a>
+          </div>
           <p className="text-gray-700 text-xs mt-6">
             © 2026 Nawabus · Todos os direitos reservados
           </p>

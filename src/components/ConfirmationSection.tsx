@@ -238,12 +238,26 @@ export default function ConfirmationSection() {
                   <div className="rounded-2xl bg-primary-soft border border-primary/25 p-5 text-left space-y-3">
                     {[
                       { icon: "📍", text: "Rua do BFA, Travessa 26, Bairro Benfica, Talatona · Luanda" },
+                      { icon: "🔗", text: "Abrir mapa no Google Maps", href: "https://maps.app.goo.gl/oj64qEYTta2ChTkE8" },
+                      { icon: "@", text: "geral@nawabus.com", href: "mailto:geral@nawabus.com" },
+                      { icon: "Tel", text: "930 533 405", href: "tel:+244930533405" },
                       { icon: "🕕", text: "18h00 — Terça-feira, 9 de Junho de 2026" },
                       { icon: "🚌", text: "Inauguração da Nova Sede Nawabus" },
                     ].map((row) => (
                       <div key={row.icon} className="flex items-center gap-3 text-sm text-gray-600">
                         <span className="text-base">{row.icon}</span>
-                        <span>{row.text}</span>
+                        {"href" in row ? (
+                          <a
+                            href={row.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-primary hover:underline"
+                          >
+                            {row.text}
+                          </a>
+                        ) : (
+                          <span>{row.text}</span>
+                        )}
                       </div>
                     ))}
                   </div>
