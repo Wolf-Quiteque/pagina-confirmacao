@@ -1,20 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { formatRsvpDate, formatTelefone, getDashboardSupabase, type Rsvp } from "@/lib/rsvps";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 10;
-
-type Rsvp = {
-  id: string;
-  nome: string;
-  telefone: string;
-  confirmado_em: string | null;
-  sms_status: string | null;
-};
 
 type NawadashProps = {
   searchParams: Promise<{ page?: string | string[] }>;
@@ -29,25 +21,6 @@ function parsePage(value: string | string[] | undefined) {
   }
 
   return page;
-}
-
-function formatTelefone(raw: string) {
-  const digits = raw.replace(/\D/g, "").slice(-9);
-
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-
-  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
-}
-
-function formatDate(value: string | null) {
-  if (!value) return "Sem data";
-
-  return new Intl.DateTimeFormat("pt-AO", {
-    dateStyle: "medium",
-    timeStyle: "short",
-    timeZone: "Africa/Luanda",
-  }).format(new Date(value));
 }
 
 function pageHref(page: number) {
@@ -88,7 +61,7 @@ export default async function NawadashPage({ searchParams }: NawadashProps) {
   const page = parsePage((await searchParams).page);
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
-  const supabase = getSupabaseAdmin();
+  const supabase = getDashboardSupabase();
 
   const { data, count, error } = await supabase
     .from("event_rsvps")
@@ -144,12 +117,20 @@ export default async function NawadashPage({ searchParams }: NawadashProps) {
               />
             </Link>
 
-            <Link
-              href="/"
-              className="inline-flex h-12 w-fit items-center justify-center rounded-2xl border border-primary/25 px-5 text-sm font-bold text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
-            >
-              Voltar ao convite
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/nawadash/export"
+                className="inline-flex h-12 w-fit items-center justify-center rounded-2xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-colors hover:bg-primary-ring hover:shadow-primary/35"
+              >
+                Exportar PDF
+              </Link>
+              <Link
+                href="/"
+                className="inline-flex h-12 w-fit items-center justify-center rounded-2xl border border-primary/25 px-5 text-sm font-bold text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
+              >
+                Voltar ao convite
+              </Link>
+            </div>
           </header>
 
           <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
@@ -216,7 +197,7 @@ export default async function NawadashPage({ searchParams }: NawadashProps) {
                       </div>
                     </div>
                     <div className="text-sm text-gray-500">
-                      {formatDate(rsvp.confirmado_em)}
+                      {formatRsvpDate(rsvp.confirmado_em)}
                     </div>
                     <div className="sm:text-right">
                       <span className="inline-flex rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-green-700 ring-1 ring-green-100">
