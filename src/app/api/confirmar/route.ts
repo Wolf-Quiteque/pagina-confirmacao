@@ -1,28 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-
-const SMS_API_URL =
-  process.env.SMS_API_URL || "https://mimo-sms-rest-api.vercel.app/send-sms";
+import { normalizePhone, sendSms, toSmsSafeText } from "@/lib/sms";
 
 export const runtime = "nodejs";
-
-function toSmsSafeText(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/[–—]/g, "-")
-    .replace(/[^\x0A\x0D\x20-\x7E]/g, "")
-    .trim();
-}
-
-/**
- * Normalize phone to 9 digits (Angola format)
- */
-function normalizePhone(phone: string): string {
-  return phone.replace(/\D/g, "").slice(-9);
-}
 
 /**
  * Send thank-you SMS to the guest.
@@ -44,39 +24,22 @@ Obrigado por confirmar a sua presenca na inauguracao da nossa nova sede!
 Data: Terca-feira, 9 de Junho de 2026
 Hora: 18h00
 Local: Rua do BFA, Travessa 26, Bairro Benfica, Talatona - Luanda
-Mapa: https://maps.app.goo.gl/oj64qEYTta2ChTkE8
+Mapa: https://maps.app.goo.gl/Szc5zP8NcJt17eTJA?g_st=ac
 Contacto: 930 533 405
 
 Esperamos por si!
 Viajar aqui e facil. - NAWABUS`);
 
-  try {
-    const response = await fetch(SMS_API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to: phoneClean, text: smsText }),
-    });
-
-    if (response.ok) {
-      return { sent: true, status: "sent" };
-    }
-
-    console.error("SMS API error:", response.status, await response.text());
-    return { sent: false, status: "failed" };
-  } catch (error) {
-    console.error("SMS send error:", error);
-    return { sent: false, status: "failed" };
-  }
+  return sendSms(phoneClean, smsText);
 }
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { nome, telefone } = body as { nome?: string; telefone?: string };
 
-  // Validate input
   if (!nome?.trim() || !telefone?.trim()) {
     return NextResponse.json(
-      { error: "Nome e telefone são obrigatórios" },
+      { error: "Nome e telefone sao obrigatorios" },
       { status: 400 }
     );
   }
@@ -86,7 +49,7 @@ export async function POST(request: NextRequest) {
 
   if (telefoneNorm.length !== 9) {
     return NextResponse.json(
-      { error: "Por favor, insira um número válido (9 dígitos)." },
+      { error: "Por favor, insira um numero valido (9 digitos)." },
       { status: 400 }
     );
   }
@@ -94,7 +57,6 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = getSupabaseAdmin();
 
-    // Insert into Supabase
     const { data, error } = await supabase
       .from("event_rsvps")
       .insert([
@@ -107,10 +69,9 @@ export async function POST(request: NextRequest) {
       .select();
 
     if (error) {
-      // Check if it's a unique constraint violation (duplicate phone)
       if (error.code === "23505") {
         return NextResponse.json(
-          { error: "Este número já foi confirmado" },
+          { error: "Este numero ja foi confirmado" },
           { status: 409 }
         );
       }
@@ -118,11 +79,8 @@ export async function POST(request: NextRequest) {
     }
 
     const confirmacao = data?.[0];
-
-    // Send SMS (non-blocking, failure is non-fatal)
     const smsResult = await sendThankYouSms(nomeClean, telefoneNorm);
 
-    // Update SMS status in Supabase. Failure is non-fatal for the RSVP.
     if (confirmacao?.id) {
       const { error: smsStatusError } = await supabase
         .from("event_rsvps")

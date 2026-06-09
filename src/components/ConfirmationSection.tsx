@@ -238,7 +238,7 @@ export default function ConfirmationSection() {
                   <div className="rounded-2xl bg-primary-soft border border-primary/25 p-5 text-left space-y-3">
                     {[
                       { icon: "📍", text: "Rua do BFA, Travessa 26, Bairro Benfica, Talatona · Luanda" },
-                      { icon: "🔗", text: "Abrir mapa no Google Maps", href: "https://maps.app.goo.gl/oj64qEYTta2ChTkE8" },
+                      { icon: "🔗", text: "Abrir mapa no Google Maps", href: "https://maps.app.goo.gl/Szc5zP8NcJt17eTJA?g_st=ac" },
                       { icon: "@", text: "geral@nawabus.com", href: "mailto:geral@nawabus.com" },
                       { icon: "Tel", text: "930 533 405", href: "tel:+244930533405" },
                       { icon: "🕕", text: "18h00 — Terça-feira, 9 de Junho de 2026" },
