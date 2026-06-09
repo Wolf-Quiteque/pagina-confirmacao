@@ -24,7 +24,7 @@ Obrigado por confirmar a sua presenca na inauguracao da nossa nova sede!
 Data: Terca-feira, 9 de Junho de 2026
 Hora: 18h00
 Local: Rua do BFA, Travessa 26, Bairro Benfica, Talatona - Luanda
-Mapa: https://maps.app.goo.gl/Szc5zP8NcJt17eTJA?g_st=ac
+Mapa: https://www.google.com/maps/search/?api=1&query=-8.9505706%2C13.1781071
 Contacto: 930 533 405
 
 Esperamos por si!

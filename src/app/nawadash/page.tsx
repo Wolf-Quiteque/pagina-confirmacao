@@ -14,7 +14,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 10;
-const REMINDER_LOCATION_LINK = "https://maps.app.goo.gl/Szc5zP8NcJt17eTJA?g_st=ac";
+const REMINDER_LOCATION_LINK =
+  "https://www.google.com/maps/search/?api=1&query=-8.9505706%2C13.1781071";
 const REMINDER_SMS_TEXT = `NAWABUS - Lembrete: a inauguracao da nova sede comeca as 18h. Localizacao exata: ${REMINDER_LOCATION_LINK}`;
 
 type NawadashProps = {
