@@ -17,11 +17,14 @@ const PAGE_SIZE = 10;
 const REMINDER_LOCATION_LINK =
   "https://www.google.com/maps/search/?api=1&query=-8.9505706%2C13.1781071";
 const REMINDER_SMS_TEXT = `NAWABUS - Lembrete: a inauguracao da nova sede comeca as 18h. Localizacao exata: ${REMINDER_LOCATION_LINK}`;
+const THANK_YOU_SMS_TEXT =
+  "NAWABUS - Agradecemos a todos por terem vindo a este momento especial da Nawabus.\n\nNawabus - Viajar aqui é facil";
 
 type NawadashProps = {
   searchParams: Promise<{
     page?: string | string[];
     reminder?: string | string[];
+    thanks?: string | string[];
     sent?: string | string[];
     failed?: string | string[];
     total?: string | string[];
@@ -97,6 +100,46 @@ async function sendReminderAction(formData: FormData) {
   redirect(`/nawadash?${params.toString()}`);
 }
 
+async function sendThankYouAction(formData: FormData) {
+  "use server";
+
+  const currentPage = parsePage(formData.get("page")?.toString());
+  const rsvps = await getAllRsvps();
+
+  if (rsvps.length === 0) {
+    redirect(`/nawadash?page=${currentPage}&thanks=empty`);
+  }
+
+  let sent = 0;
+  let failed = 0;
+  const batchSize = 10;
+
+  for (let index = 0; index < rsvps.length; index += batchSize) {
+    const batch = rsvps.slice(index, index + batchSize);
+    const results = await Promise.all(
+      batch.map((rsvp) => sendSms(rsvp.telefone, THANK_YOU_SMS_TEXT))
+    );
+
+    for (const result of results) {
+      if (result.sent) {
+        sent += 1;
+      } else {
+        failed += 1;
+      }
+    }
+  }
+
+  const params = new URLSearchParams({
+    page: String(currentPage),
+    thanks: "sent",
+    total: String(rsvps.length),
+    sent: String(sent),
+    failed: String(failed),
+  });
+
+  redirect(`/nawadash?${params.toString()}`);
+}
+
 function PaginationButton({
   disabled,
   href,
@@ -131,9 +174,10 @@ export default async function NawadashPage({ searchParams }: NawadashProps) {
   const params = await searchParams;
   const page = parsePage(params.page);
   const reminderStatus = singleParam(params.reminder);
-  const reminderSent = parseCount(params.sent);
-  const reminderFailed = parseCount(params.failed);
-  const reminderTotal = parseCount(params.total);
+  const thankYouStatus = singleParam(params.thanks);
+  const messageSent = parseCount(params.sent);
+  const messageFailed = parseCount(params.failed);
+  const messageTotal = parseCount(params.total);
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
   const supabase = getDashboardSupabase();
@@ -238,62 +282,114 @@ export default async function NawadashPage({ searchParams }: NawadashProps) {
             </div>
           </div>
 
-          <section className="rounded-3xl border border-primary/20 bg-white/8 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-7">
-            <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-primary">
-                  Lembrete por SMS
-                </p>
-                <h2 className="mt-2 text-2xl font-black text-white">
-                  Enviar lembrete aos confirmados
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-primary-muted/60">
-                  Envia uma mensagem curta para todos os {total} contactos confirmados,
-                  reforcando que o evento comeca as 18h e incluindo a localizacao exata.
+          <section className="grid gap-6 lg:grid-cols-2">
+            <div className="rounded-3xl border border-primary/20 bg-white/8 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-7">
+              <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                    Lembrete por SMS
+                  </p>
+                  <h2 className="mt-2 text-2xl font-black text-white">
+                    Enviar lembrete aos confirmados
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-primary-muted/60">
+                    Envia uma mensagem curta para todos os {total} contactos confirmados,
+                    reforcando que o evento comeca as 18h e incluindo a localizacao exata.
+                  </p>
+                </div>
+
+                <form action={sendReminderAction} className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                  <input type="hidden" name="page" value={page} />
+                  <button
+                    type="submit"
+                    disabled={total === 0}
+                    className="inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-colors hover:bg-primary-ring hover:shadow-primary/35 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-primary-muted/35 disabled:shadow-none"
+                  >
+                    Enviar lembrete
+                  </button>
+                  <a
+                    href={REMINDER_LOCATION_LINK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-primary/25 px-5 text-sm font-bold text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
+                  >
+                    Abrir localizacao
+                  </a>
+                </form>
+              </div>
+
+              <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="text-xs font-bold uppercase tracking-widest text-primary-muted/50">
+                  Mensagem
+                </div>
+                <p className="mt-2 text-sm font-semibold leading-relaxed text-white">
+                  {REMINDER_SMS_TEXT}
                 </p>
               </div>
 
-              <form action={sendReminderAction} className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-                <input type="hidden" name="page" value={page} />
-                <button
-                  type="submit"
-                  disabled={total === 0}
-                  className="inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-colors hover:bg-primary-ring hover:shadow-primary/35 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-primary-muted/35 disabled:shadow-none"
-                >
-                  Enviar lembrete
-                </button>
-                <a
-                  href={REMINDER_LOCATION_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-12 items-center justify-center rounded-2xl border border-primary/25 px-5 text-sm font-bold text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
-                >
-                  Abrir localizacao
-                </a>
-              </form>
+              {reminderStatus === "sent" ? (
+                <div className="mt-4 rounded-2xl border border-green-400/25 bg-green-400/10 px-4 py-3 text-sm font-semibold text-green-100">
+                  Lembrete enviado para {messageSent} de {messageTotal} confirmados.
+                  {messageFailed > 0 ? ` Falhas: ${messageFailed}.` : ""}
+                </div>
+              ) : null}
+
+              {reminderStatus === "empty" ? (
+                <div className="mt-4 rounded-2xl border border-primary/25 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary-muted">
+                  Ainda nao existem confirmados para enviar lembrete.
+                </div>
+              ) : null}
             </div>
 
-            <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
-              <div className="text-xs font-bold uppercase tracking-widest text-primary-muted/50">
-                Mensagem
+            <div className="rounded-3xl border border-primary/20 bg-white/8 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-7">
+              <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                    Agradecimento por SMS
+                  </p>
+                  <h2 className="mt-2 text-2xl font-black text-white">
+                    Agradecer aos confirmados
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-primary-muted/60">
+                    Envia uma mensagem de agradecimento para todos os {total} contactos
+                    confirmados pela presenca no momento especial da Nawabus.
+                  </p>
+                </div>
+
+                <form action={sendThankYouAction} className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                  <input type="hidden" name="page" value={page} />
+                  <button
+                    type="submit"
+                    disabled={total === 0}
+                    className="inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-colors hover:bg-primary-ring hover:shadow-primary/35 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-primary-muted/35 disabled:shadow-none"
+                  >
+                    Enviar agradecimento
+                  </button>
+                </form>
               </div>
-              <p className="mt-2 text-sm font-semibold leading-relaxed text-white">
-                {REMINDER_SMS_TEXT}
-              </p>
+
+              <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="text-xs font-bold uppercase tracking-widest text-primary-muted/50">
+                  Mensagem
+                </div>
+                <p className="mt-2 whitespace-pre-line text-sm font-semibold leading-relaxed text-white">
+                  {THANK_YOU_SMS_TEXT}
+                </p>
+              </div>
+
+              {thankYouStatus === "sent" ? (
+                <div className="mt-4 rounded-2xl border border-green-400/25 bg-green-400/10 px-4 py-3 text-sm font-semibold text-green-100">
+                  Agradecimento enviado para {messageSent} de {messageTotal} confirmados.
+                  {messageFailed > 0 ? ` Falhas: ${messageFailed}.` : ""}
+                </div>
+              ) : null}
+
+              {thankYouStatus === "empty" ? (
+                <div className="mt-4 rounded-2xl border border-primary/25 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary-muted">
+                  Ainda nao existem confirmados para enviar agradecimento.
+                </div>
+              ) : null}
             </div>
-
-            {reminderStatus === "sent" ? (
-              <div className="mt-4 rounded-2xl border border-green-400/25 bg-green-400/10 px-4 py-3 text-sm font-semibold text-green-100">
-                Lembrete enviado para {reminderSent} de {reminderTotal} confirmados.
-                {reminderFailed > 0 ? ` Falhas: ${reminderFailed}.` : ""}
-              </div>
-            ) : null}
-
-            {reminderStatus === "empty" ? (
-              <div className="mt-4 rounded-2xl border border-primary/25 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary-muted">
-                Ainda nao existem confirmados para enviar lembrete.
-              </div>
-            ) : null}
           </section>
 
           <section className="overflow-hidden rounded-3xl border border-primary/20 bg-white shadow-2xl shadow-black/25">
