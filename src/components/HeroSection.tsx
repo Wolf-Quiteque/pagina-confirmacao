@@ -130,7 +130,7 @@ export default function HeroSection() {
                        hover:scale-105 active:scale-95
                        transition-all duration-300"
           >
-            <span>Confirmar Presença</span>
+            <span>Ver fotos em breve</span>
             <motion.span
               animate={{ y: [0, 5, 0] }}
               transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}

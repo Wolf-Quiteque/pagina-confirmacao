@@ -10,13 +10,14 @@ const geist = Geist({
 export const metadata: Metadata = {
   title: "Inauguração da Nova Sede | Nawabus",
   description:
-    "Confirme a sua presença na inauguração da nova sede da Nawabus — 9 de Junho de 2026 às 18h00, Rua do BFA, Travessa 26, Bairro Benfica, Talatona — Luanda.",
+    "Obrigado por celebrar a inauguracao da nova sede da Nawabus. Em breve podera descarregar as fotos da inauguracao.",
   icons: {
     icon: "/favicon.png",
   },
   openGraph: {
     title: "Inauguração da Nova Sede | Nawabus",
-    description: "Marque presença neste momento histórico. 9 de Junho de 2026, 18h00.",
+    description:
+      "Obrigado por celebrar este momento historico com a Nawabus. Em breve podera descarregar as fotos da inauguracao.",
     locale: "pt_AO",
     type: "website",
   },
