@@ -18,7 +18,7 @@ const REMINDER_LOCATION_LINK =
   "https://www.google.com/maps/search/?api=1&query=-8.9505706%2C13.1781071";
 const REMINDER_SMS_TEXT = `NAWABUS - Lembrete: a inauguracao da nova sede comeca as 18h. Localizacao exata: ${REMINDER_LOCATION_LINK}`;
 const THANK_YOU_SMS_TEXT =
-  "NAWABUS - Agradecemos a todos por terem vindo a este momento especial da Nawabus.\n\nNawabus - Viajar aqui é facil";
+  "NAWABUS - Agradecemos a todos por terem vindo a este momento especial da Nawabus.\nA vossa presenca tornou este dia ainda mais marcante para a nossa historia.\nSeguimos juntos, com gratidao, para novas viagens e novas conquistas.\n\nNawabus - Viajar aqui é facil";
 
 type NawadashProps = {
   searchParams: Promise<{
